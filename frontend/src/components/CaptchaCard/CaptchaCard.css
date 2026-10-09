@@ -1,0 +1,106 @@
+/* ── CaptchaCard ─────────────────────────────────────────────────────────────── */
+
+.captcha-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-xl);
+  padding: 1.75rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle dot pattern */
+.captcha-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(59,130,246,0.06) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.captcha-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.captcha-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Timer */
+.captcha-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-4);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  padding: 0.22rem 0.65rem;
+  border-radius: 6px;
+  transition: all 0.3s;
+  font-variant-numeric: tabular-nums;
+}
+
+.captcha-timer--warn {
+  color: #fb923c;
+  background: rgba(245,158,11,0.08);
+  border-color: rgba(245,158,11,0.25);
+  animation: pulse-warn 1s ease-in-out infinite;
+}
+
+@keyframes pulse-warn {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.65; }
+}
+
+/* CAPTCHA display area */
+.captcha-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 1.5rem 1rem 1rem;
+  min-height: 88px;
+  position: relative;
+  z-index: 1;
+}
+
+.captcha-char {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Courier New', 'Roboto Mono', monospace;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.04em;
+  /* Each character has slight random rotation via CSS custom property set in JSX */
+  animation: char-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--delay, 0s);
+  user-select: none;
+  /* Subtle selection background look */
+  padding: 0 0.1rem;
+}
+
+@keyframes char-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);   }
+}
+
+.captcha-hint {
+  font-size: 0.775rem;
+  color: var(--text-5);
+  margin-top: 0.75rem;
+  position: relative;
+  z-index: 1;
+}

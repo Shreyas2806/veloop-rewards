@@ -1,0 +1,96 @@
+/* ── CAPTCHA Earn page ────────────────────────────────────────────────────────── */
+
+.earn-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.earn-main {
+  flex: 1;
+  padding: 2.5rem 1.5rem 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.earn-container {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── Page header ─────────────────────────────────────────────────────────────── */
+.earn-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.earn-header-icon {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: var(--r-md);
+  background: rgba(59,130,246,0.12);
+  border: 1px solid rgba(59,130,246,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-l);
+}
+
+.earn-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.earn-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-4);
+  margin: 0.15rem 0 0;
+}
+
+.earn-header-balance { margin-left: auto; }
+
+/* ── Main card ────────────────────────────────────────────────────────────────── */
+.earn-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2xl);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: var(--shadow-md);
+}
+
+.earn-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.earn-verifying { padding: 0.5rem 0; }
+
+/* ── Verify button ────────────────────────────────────────────────────────────── */
+.btn-verify {
+  width: 100%;
+  justify-content: center;
+  padding: 0.8rem;
+  font-size: 0.95rem;
+}
+
+/* ── Skip ─────────────────────────────────────────────────────────────────────── */
+.earn-skip { text-align: center; }
+
+@media (max-width: 480px) {
+  .earn-main      { padding: 1.25rem 1rem 2rem; }
+  .earn-card      { padding: 1.25rem; border-radius: var(--r-xl); }
+  .earn-header-balance { display: none; }
+}

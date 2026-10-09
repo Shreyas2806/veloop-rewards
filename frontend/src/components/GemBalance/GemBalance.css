@@ -1,0 +1,71 @@
+/* ── GemBalance ─────────────────────────────────────────────────────────────── */
+
+/* Compact badge (in navbar) */
+.gem-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(59,130,246,0.1);
+  border: 1px solid rgba(59,130,246,0.22);
+  color: var(--primary-l);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.28rem 0.75rem;
+  border-radius: 20px;
+  white-space: nowrap;
+  transition: background 0.18s;
+}
+.gem-badge:hover { background: rgba(59,130,246,0.16); }
+.gem-icon { color: var(--primary); }
+
+/* Full balance card (on earn page header) */
+.gem-balance-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  padding: 0.9rem 1.25rem;
+}
+
+.gem-balance-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  background: rgba(59,130,246,0.12);
+  border: 1px solid rgba(59,130,246,0.2);
+  color: var(--primary-l);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gem-balance-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.gem-balance-label {
+  font-size: 0.7rem;
+  color: var(--text-4);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.gem-balance-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.gem-balance-unit {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--primary);
+  margin-left: 0.2rem;
+}
