@@ -55,21 +55,26 @@ const allowedOrigins = (
   .map((o) => o.trim())
   .filter(Boolean);
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (curl, Postman, server-to-server)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
-        return callback(null, true);
-      }
-      return callback(new Error(`CORS: origin '${origin}' not allowed`));
-    },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (curl, Postman, server-to-server)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS: origin '${origin}' not allowed`));
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+// Explicitly handle OPTIONS preflight for all routes.
+// Without this, OPTIONS requests fall through to notFoundHandler and return 404,
+// which the browser treats as a CORS failure.
+app.options('*', cors(corsOptions));
 
 // JSON body parsing — limit payload size to prevent abuse
 app.use(express.json({ limit: '10kb' }));
