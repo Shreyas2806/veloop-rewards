@@ -1,0 +1,127 @@
+# ─── nginx.conf — VELoop Rewards Load Balancer ────────────────────────────────
+#
+# Distributes /api/ requests across two Express backend instances using
+# round-robin (Nginx default, no additional directive needed).
+#
+# Compatible with open-source Nginx 1.20+.
+# No commercial (Plus) features are used.
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Worker count — "auto" matches the number of CPU cores on the host.
+worker_processes auto;
+
+# Maximum open file descriptors per worker.
+worker_rlimit_nofile 1024;
+
+events {
+    # Maximum simultaneous connections per worker.
+    worker_connections 512;
+}
+
+http {
+    # ── Logging ──────────────────────────────────────────────────────────────
+    log_format main '$remote_addr - $remote_user [$time_local] '
+                    '"$request" $status $body_bytes_sent '
+                    '"$http_referer" "$http_user_agent" '
+                    'upstream="$upstream_addr" rt=$request_time';
+
+    access_log /var/log/nginx/access.log main;
+    error_log  /var/log/nginx/error.log  warn;
+
+    # ── Performance ──────────────────────────────────────────────────────────
+    sendfile           on;
+    tcp_nopush         on;
+    keepalive_timeout  65;
+    gzip               off;   # API JSON — compression handled per-instance if desired
+
+    # ── Upstream — round-robin across two Express instances ──────────────────
+    #
+    # Round-robin is Nginx's default when no load-balancing directive is set.
+    # Each request goes to the next server in the list in sequence.
+    #
+    # max_fails / fail_timeout:
+    #   If a backend returns 5 failures within 10 s, Nginx marks it as
+    #   unavailable for 10 s and routes all traffic to the healthy instance.
+    #   After 10 s it is retried.
+    #
+    # The server addresses are injected by docker-compose via environment
+    # variable substitution (envsubst). For non-Docker use, replace
+    # ${BACKEND_1_HOST}:${BACKEND_1_PORT} with literal host:port values.
+    # ────────────────────────────────────────────────────────────────────────
+    upstream veloop_backend {
+        server ${BACKEND_1_HOST}:${BACKEND_1_PORT} max_fails=3 fail_timeout=10s;
+        server ${BACKEND_2_HOST}:${BACKEND_2_PORT} max_fails=3 fail_timeout=10s;
+
+        # Keep 32 idle upstream connections per worker alive.
+        keepalive 32;
+    }
+
+    # ── Server block ─────────────────────────────────────────────────────────
+    server {
+        listen 80;
+        server_name _;   # catch-all; replace with actual domain in production
+
+        # ── Health check endpoint ─────────────────────────────────────────────
+        # Nginx itself responds 200 — used by Docker health checks and Render
+        # without forwarding to the backend pool.
+        location = /nginx-health {
+            access_log off;
+            return 200 '{"status":"ok","service":"nginx-lb"}';
+            add_header Content-Type application/json;
+        }
+
+        # ── API proxy ─────────────────────────────────────────────────────────
+        # Forwards all /api/ traffic to the upstream pool.
+        # OPTIONS preflight is forwarded — the Express backend handles CORS.
+        location /api/ {
+            proxy_pass         http://veloop_backend;
+            proxy_http_version 1.1;
+
+            # Required for upstream keepalive.
+            proxy_set_header   Connection        "";
+
+            # Standard proxy headers — backend reads these for logging/security.
+            proxy_set_header   Host              $host;
+            proxy_set_header   X-Real-IP         $remote_addr;
+            proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+            proxy_set_header   X-Forwarded-Proto $scheme;
+
+            # ── Timeouts ─────────────────────────────────────────────────────
+            # connect:  how long to wait for the TCP handshake to an upstream.
+            # send:     how long to wait to send the request to the upstream.
+            # read:     how long to wait for the upstream's response.
+            proxy_connect_timeout  5s;
+            proxy_send_timeout     10s;
+            proxy_read_timeout     30s;
+
+            # ── Retry on failure ─────────────────────────────────────────────
+            # Retry on connection-level errors and timeouts — NOT on HTTP 4xx/5xx,
+            # because those are valid application responses (e.g. 409 for duplicate
+            # claim). Retrying 4xx/5xx would risk double-processing rewards.
+            proxy_next_upstream    error timeout;
+            proxy_next_upstream_tries 2;
+
+            # ── Caching — disabled for all auth/CAPTCHA/wallet API responses ──
+            # The backend controls Cache-Control; Nginx does not cache here.
+            proxy_buffering        on;
+            proxy_cache            off;
+
+            # Remove any upstream-set X-Powered-By header.
+            proxy_hide_header      X-Powered-By;
+        }
+
+        # ── 502/503/504 custom error pages ────────────────────────────────────
+        error_page 502 503 504 /50x.json;
+        location = /50x.json {
+            internal;
+            return 503 '{"success":false,"message":"All backend instances are currently unavailable. Please try again shortly."}';
+            add_header Content-Type application/json always;
+        }
+
+        # ── Block all other paths ─────────────────────────────────────────────
+        location / {
+            return 404 '{"success":false,"message":"Not found"}';
+            add_header Content-Type application/json;
+        }
+    }
+}
