@@ -1,0 +1,105 @@
+# ─── docker-compose.yml — VELoop Rewards Local Load-Balancer Demo ─────────────
+#
+# Starts three containers on a shared private network:
+#   nginx-lb      — Nginx reverse proxy, exposed on localhost:8080
+#   backend-1     — Express instance on internal port 5001
+#   backend-2     — Express instance on internal port 5002
+#
+# Both backend instances share the same MongoDB Atlas database and JWT secret
+# via environment variables supplied through backend.env (not committed).
+#
+# HOW TO USE
+#   1. cp backend/backend.env.example backend/backend.env
+#      (and fill in real values — see load-balancer/README.md)
+#   2. docker compose up --build
+#   3. curl http://localhost:8080/api/health
+#
+# IMPORTANT: This is a LOCAL DEMONSTRATION only.
+# See load-balancer/README.md — "Production on Render" section — for the
+# additional infrastructure required in a real production deployment.
+# ──────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── Nginx load balancer ───────────────────────────────────────────────────
+  nginx-lb:
+    build:
+      context: ./load-balancer
+      dockerfile: Dockerfile
+    container_name: veloop-nginx-lb
+    ports:
+      - "80:80"                 # standard HTTP — accessible at http://YOUR_VPS_IP
+    environment:
+      BACKEND_1_HOST: backend-1
+      BACKEND_1_PORT: "5001"
+      BACKEND_2_HOST: backend-2
+      BACKEND_2_PORT: "5002"
+    depends_on:
+      backend-1:
+        condition: service_healthy
+      backend-2:
+        condition: service_healthy
+    networks:
+      - veloop-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/nginx-health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ── Backend instance 1 ────────────────────────────────────────────────────
+  backend-1:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: veloop-backend-1
+    env_file:
+      - ./backend/backend.env      # real secrets — never committed
+    environment:
+      PORT: "5001"
+      INSTANCE_ID: "backend-1"    # for identifying which instance served a request
+    expose:
+      - "5001"                     # internal only — not published to host
+    networks:
+      - veloop-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e",
+             "require('http').get('http://localhost:5001/api/health', r => process.exit(r.statusCode===200?0:1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  # ── Backend instance 2 ────────────────────────────────────────────────────
+  backend-2:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: veloop-backend-2
+    env_file:
+      - ./backend/backend.env      # same secrets — same DB, same JWT_SECRET
+    environment:
+      PORT: "5002"
+      INSTANCE_ID: "backend-2"
+    expose:
+      - "5002"
+    networks:
+      - veloop-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e",
+             "require('http').get('http://localhost:5002/api/health', r => process.exit(r.statusCode===200?0:1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+# ── Shared internal network ───────────────────────────────────────────────────
+# All three containers can communicate; nothing is exposed to the host except
+# nginx-lb on port 8080.
+networks:
+  veloop-net:
+    driver: bridge
