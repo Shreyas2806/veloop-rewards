@@ -1,4 +1,2 @@
-/* Register-specific overrides — base styles in Login.css */
-
-/* field-err and field-input--error are already defined in Login.css,
-   these are kept empty so existing imports don't break */
+/* Register.css — any overrides needed beyond Login.css */
+/* No extra overrides needed — Register shares Login.css styles */

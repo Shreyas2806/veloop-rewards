@@ -6,13 +6,15 @@ import './VerificationState.css';
 
 export function VerificationState() {
   return (
-    <div className="verifying">
-      <div className="verifying-ring">
-        <div className="verifying-dot" />
-        <div className="verifying-dot" />
-        <div className="verifying-dot" />
+    <div className="verification-state">
+      <div className="verification-orb">
+        <div className="verification-orb-inner" />
+        <div className="verification-orb-glow" />
       </div>
-      <p className="verifying-label">Verifying your answer…</p>
+      <div className="verification-text">
+        <span className="verification-label">Verifying your answer…</span>
+        <span className="verification-sub">Checking with the server</span>
+      </div>
     </div>
   );
 }

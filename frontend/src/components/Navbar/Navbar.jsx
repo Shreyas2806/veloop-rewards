@@ -23,10 +23,12 @@ export function Navbar() {
         {/* Brand */}
         <Link to="/captcha" className="navbar-brand">
           <div className="navbar-logo">
-            <Zap size={20} />
+            <Zap size={18} />
           </div>
-          <span className="navbar-title">VELoop</span>
-          <span className="navbar-subtitle">Rewards</span>
+          <div className="navbar-wordmark">
+            <span className="navbar-title">VELoop</span>
+            <span className="navbar-subtitle">Rewards</span>
+          </div>
         </Link>
 
         {/* Nav links */}

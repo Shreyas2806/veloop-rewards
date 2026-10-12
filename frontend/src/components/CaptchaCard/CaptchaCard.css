@@ -1,23 +1,32 @@
-/* ── CaptchaCard ─────────────────────────────────────────────────────────────── */
+/* ── CaptchaCard — Premium Challenge Display ─────────────────────────────────── */
 
 .captcha-card {
   background: var(--surface-2);
   border: 1px solid var(--border-2);
   border-radius: var(--r-xl);
-  padding: 1.75rem 2rem;
+  padding: 1.75rem 2rem 1.5rem;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
-/* Subtle dot pattern */
+/* Fine dot-grid */
 .captcha-card::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(59,130,246,0.06) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(59,130,246,0.07) 1px, transparent 1px);
   background-size: 20px 20px;
   pointer-events: none;
+}
+
+/* Top edge glow */
+.captcha-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 20%; right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59,130,246,0.5), rgba(139,92,246,0.4), transparent);
 }
 
 .captcha-card-header {
@@ -25,52 +34,75 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.25rem;
+  position: relative;
+  z-index: 1;
 }
 
 .captcha-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--text-4);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-3);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.captcha-label::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary);
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
 }
 
 /* Timer */
 .captcha-timer {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-4);
-  background: var(--surface-3);
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-3);
+  background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
   padding: 0.22rem 0.65rem;
-  border-radius: 6px;
-  transition: all 0.3s;
+  border-radius: var(--r-sm);
+  transition: all 0.25s ease;
   font-variant-numeric: tabular-nums;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.03em;
 }
 
 .captcha-timer--warn {
-  color: #fb923c;
-  background: rgba(245,158,11,0.08);
-  border-color: rgba(245,158,11,0.25);
-  animation: pulse-warn 1s ease-in-out infinite;
+  color: #fbbf24;
+  background: rgba(245,158,11,0.1);
+  border-color: rgba(245,158,11,0.3);
+  box-shadow: 0 0 10px rgba(245,158,11,0.18);
+  animation: timer-warn 1s ease-in-out infinite;
 }
 
-@keyframes pulse-warn {
+@keyframes timer-warn {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.65; }
 }
 
-/* CAPTCHA display area */
+/* CAPTCHA display */
 .captcha-display {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
-  padding: 1.5rem 1rem 1rem;
-  min-height: 88px;
+  gap: 0.55rem;
+  padding: 1.75rem 1rem 1.25rem;
+  min-height: 96px;
   position: relative;
   z-index: 1;
 }
@@ -79,28 +111,44 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Courier New', 'Roboto Mono', monospace;
-  font-size: 2rem;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 2.35rem;
   font-weight: 800;
-  color: var(--text);
-  letter-spacing: 0.04em;
-  /* Each character has slight random rotation via CSS custom property set in JSX */
-  animation: char-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  color: #fff;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--r-md);
+  min-width: 46px;
+  height: 60px;
+  padding: 0 0.45rem;
+  text-shadow: 0 2px 12px rgba(59,130,246,0.5);
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.2);
+  animation: char-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: var(--delay, 0s);
   user-select: none;
-  /* Subtle selection background look */
-  padding: 0 0.1rem;
+  transform-origin: bottom center;
 }
 
 @keyframes char-in {
-  from { opacity: 0; transform: translateY(-6px) scale(0.9); }
-  to   { opacity: 1; transform: translateY(0)   scale(1);   }
+  from { opacity: 0; transform: translateY(-10px) scale(0.8) rotateX(-15deg); }
+  to   { opacity: 1; transform: translateY(0) scale(1) rotateX(0); }
 }
 
 .captcha-hint {
-  font-size: 0.775rem;
-  color: var(--text-5);
-  margin-top: 0.75rem;
+  font-size: 0.76rem;
+  color: var(--text-4);
+  font-weight: 500;
+  margin-top: 0.5rem;
   position: relative;
   z-index: 1;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 480px) {
+  .captcha-card { padding: 1.25rem 1rem; }
+  .captcha-display { gap: 0.35rem; padding: 1.25rem 0.5rem 1rem; }
+  .captcha-char { font-size: 1.8rem; min-width: 38px; height: 50px; }
 }

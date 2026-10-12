@@ -22,9 +22,9 @@ export default function Register() {
 
   const validate = () => {
     const e = {};
-    if (!form.name.trim()) e.name = 'Name is required';
-    if (!form.email)       e.email = 'Email is required';
-    if (form.password.length < 8) e.password = 'Password must be at least 8 characters';
+    if (!form.name.trim())           e.name = 'Name is required';
+    if (!form.email)                 e.email = 'Email is required';
+    if (form.password.length < 8)    e.password = 'Password must be at least 8 characters';
     if (form.password !== form.confirm) e.confirm = 'Passwords do not match';
     return e;
   };
@@ -46,10 +46,10 @@ export default function Register() {
       navigate('/login', { state: { registered: true } });
     } catch (err) {
       const status = err?.status;
-      if (status === 409) setApiError('An account with this email already exists.');
+      if (status === 409)      setApiError('An account with this email already exists.');
       else if (status === 422) setApiError('Please check your inputs and try again.');
       else if (status === 429) setApiError('Too many attempts. Please wait a moment.');
-      else setApiError(err?.message || 'Registration failed. Please try again.');
+      else                     setApiError(err?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -57,72 +57,103 @@ export default function Register() {
 
   return (
     <div className="auth-page">
-      <div className="auth-card">
-        <div className="auth-logo">
-          <div className="auth-logo-icon"><Zap size={22} /></div>
+      {/* ── Brand panel (desktop only) ── */}
+      <aside className="auth-panel">
+        <div className="auth-panel-logo">
+          <div className="auth-panel-icon"><Zap size={24} /></div>
           <div>
-            <span className="auth-brand">VELoop</span>
-            <span className="auth-brand-sub">Rewards</span>
+            <span className="auth-panel-brand">VELoop</span>
+            <span className="auth-panel-sub">Rewards</span>
           </div>
         </div>
-
-        <h1 className="auth-title">Create account</h1>
-        <p className="auth-desc">Start earning Gems with every CAPTCHA</p>
-
-        <form onSubmit={handleSubmit} className="auth-form" noValidate>
-          <div className="field">
-            <label htmlFor="reg-name" className="field-label">Name</label>
-            <input id="reg-name" name="name" type="text" autoComplete="name"
-              className={`field-input${errors.name ? ' field-input--error' : ''}`}
-              placeholder="Your name" value={form.name} onChange={handleChange} disabled={loading} />
-            {errors.name && <span className="field-err">{errors.name}</span>}
-          </div>
-
-          <div className="field">
-            <label htmlFor="reg-email" className="field-label">Email</label>
-            <input id="reg-email" name="email" type="email" autoComplete="email"
-              className={`field-input${errors.email ? ' field-input--error' : ''}`}
-              placeholder="you@example.com" value={form.email} onChange={handleChange} disabled={loading} />
-            {errors.email && <span className="field-err">{errors.email}</span>}
-          </div>
-
-          <div className="field">
-            <label htmlFor="reg-password" className="field-label">Password</label>
-            <div className="field-input-wrap">
-              <input id="reg-password" name="password"
-                type={showPw ? 'text' : 'password'} autoComplete="new-password"
-                className={`field-input${errors.password ? ' field-input--error' : ''}`}
-                placeholder="Min 8 characters" value={form.password} onChange={handleChange} disabled={loading} />
-              <button type="button" className="field-eye"
-                onClick={() => setShowPw(!showPw)} aria-label="Toggle password" tabIndex={-1}>
-                {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-            {errors.password && <span className="field-err">{errors.password}</span>}
-          </div>
-
-          <div className="field">
-            <label htmlFor="reg-confirm" className="field-label">Confirm Password</label>
-            <input id="reg-confirm" name="confirm" type="password" autoComplete="new-password"
-              className={`field-input${errors.confirm ? ' field-input--error' : ''}`}
-              placeholder="Repeat password" value={form.confirm} onChange={handleChange} disabled={loading} />
-            {errors.confirm && <span className="field-err">{errors.confirm}</span>}
-          </div>
-
-          {apiError && <p className="auth-error" role="alert">{apiError}</p>}
-
-          <button id="btn-register" type="submit" className="btn btn-primary btn-full" disabled={loading}>
-            {loading ? <><span className="btn-spinner" /> Creating account…</> : 'Create Account'}
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          Already have an account?{' '}
-          <Link to="/login" className="auth-link">Sign in</Link>
+        <h2 className="auth-panel-heading">
+          Start earning <em>today</em>
+        </h2>
+        <p className="auth-panel-desc">
+          Join VELoop Rewards and get paid for every CAPTCHA you solve. Simple, instant, rewarding.
         </p>
+        <div className="auth-panel-features">
+          {['Free to join — no catches', 'Earn Gems for every attempt', 'Correct answers earn bonus rewards', 'Withdraw whenever you like'].map((f) => (
+            <div className="auth-panel-feature" key={f}>
+              <div className="auth-feature-dot" />
+              {f}
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      {/* ── Form panel ── */}
+      <div className="auth-form-panel">
+        <div className="auth-card">
+          {/* Mobile-only logo */}
+          <div className="auth-mobile-logo">
+            <div className="auth-mobile-icon"><Zap size={18} /></div>
+            <div>
+              <span className="auth-brand">VELoop</span>
+              <span className="auth-brand-sub">Rewards</span>
+            </div>
+          </div>
+
+          <h1 className="auth-title">Create account</h1>
+          <p className="auth-desc">Start earning Gems with every CAPTCHA</p>
+
+          <form onSubmit={handleSubmit} className="auth-form" noValidate>
+            <div className="field">
+              <label htmlFor="reg-name" className="field-label">Name</label>
+              <input id="reg-name" name="name" type="text" autoComplete="name"
+                className={`field-input${errors.name ? ' field-input--error' : ''}`}
+                placeholder="Your name" value={form.name} onChange={handleChange} disabled={loading} />
+              {errors.name && <span className="field-err">{errors.name}</span>}
+            </div>
+
+            <div className="field">
+              <label htmlFor="reg-email" className="field-label">Email</label>
+              <input id="reg-email" name="email" type="email" autoComplete="email"
+                className={`field-input${errors.email ? ' field-input--error' : ''}`}
+                placeholder="you@example.com" value={form.email} onChange={handleChange} disabled={loading} />
+              {errors.email && <span className="field-err">{errors.email}</span>}
+            </div>
+
+            <div className="field">
+              <label htmlFor="reg-password" className="field-label">Password</label>
+              <div className="field-input-wrap">
+                <input id="reg-password" name="password"
+                  type={showPw ? 'text' : 'password'} autoComplete="new-password"
+                  className={`field-input${errors.password ? ' field-input--error' : ''}`}
+                  placeholder="Min 8 characters" value={form.password} onChange={handleChange} disabled={loading} />
+                <button type="button" className="field-eye"
+                  onClick={() => setShowPw(!showPw)} aria-label="Toggle password" tabIndex={-1}>
+                  {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </div>
+              {errors.password && <span className="field-err">{errors.password}</span>}
+            </div>
+
+            <div className="field">
+              <label htmlFor="reg-confirm" className="field-label">Confirm Password</label>
+              <input id="reg-confirm" name="confirm" type="password" autoComplete="new-password"
+                className={`field-input${errors.confirm ? ' field-input--error' : ''}`}
+                placeholder="Repeat password" value={form.confirm} onChange={handleChange} disabled={loading} />
+              {errors.confirm && <span className="field-err">{errors.confirm}</span>}
+            </div>
+
+            {apiError && <p className="auth-error" role="alert">{apiError}</p>}
+
+            <button id="btn-register" type="submit" className="btn btn-primary btn-full btn-lg" disabled={loading}>
+              {loading ? <><span className="btn-spinner" /> Creating account…</> : 'Create Account'}
+            </button>
+          </form>
+
+          <p className="auth-footer">
+            Already have an account?{' '}
+            <Link to="/login" className="auth-link">Sign in</Link>
+          </p>
+        </div>
+
+        {/* Ambient blobs */}
+        <div className="auth-blob auth-blob--1" />
+        <div className="auth-blob auth-blob--2" />
       </div>
-      <div className="auth-blob auth-blob--1" />
-      <div className="auth-blob auth-blob--2" />
     </div>
   );
 }

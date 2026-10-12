@@ -8,6 +8,8 @@
 import { Check, X } from 'lucide-react';
 import './CaptchaOptions.css';
 
+const OPTION_LABELS = ['A', 'B', 'C', 'D'];
+
 export function CaptchaOptions({
   options = [],
   selected,
@@ -41,6 +43,7 @@ export function CaptchaOptions({
             aria-label={`Option: ${opt}`}
             aria-pressed={opt === selected}
           >
+            <span className="option-badge">{OPTION_LABELS[i] || i + 1}</span>
             <span className="option-text">{opt}</span>
             {state === 'correct' && <Check size={16} className="option-icon" />}
             {state === 'wrong'   && <X    size={16} className="option-icon" />}

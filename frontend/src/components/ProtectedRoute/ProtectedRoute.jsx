@@ -17,6 +17,6 @@ export function ProtectedRoute({ children }) {
 export function PublicRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="full-loading"><div className="spinner" /></div>;
-  if (user) return <Navigate to="/captcha" replace />;
+  if (user) return <Navigate to="/dashboard" replace />;
   return children;
 }
