@@ -1,4 +1,4 @@
-/* ── CaptchaEarn — The Signature Screen ─────────────────────────────────────── */
+/* ── CaptchaEarn — Reference Redesign (CAPTCHA EARN FLOW) ──────────────────── */
 
 .earn-page {
   min-height: 100vh;
@@ -9,22 +9,23 @@
   overflow-x: hidden;
 }
 
-/* Background atmospheric glow */
+/* Background atmospheric lighting */
 .earn-page::before {
   content: '';
   position: absolute;
-  top: 0; left: 50%;
+  top: 0;
+  left: 50%;
   transform: translateX(-50%);
-  width: 800px;
-  height: 500px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.1) 0%, rgba(139,92,246,0.05) 40%, transparent 70%);
+  width: 960px;
+  height: 550px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(59, 130, 246, 0.12) 0%, rgba(139, 92, 246, 0.06) 40%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
 
 .earn-main {
   flex: 1;
-  padding: 2.5rem 1.5rem 4rem;
+  padding: 1.75rem 1.5rem 4.5rem;
   display: flex;
   justify-content: center;
   position: relative;
@@ -33,77 +34,232 @@
 
 .earn-container {
   width: 100%;
-  max-width: 600px;
+  max-width: 680px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
-/* ── Page header ─────────────────────────────────────────────────────────────── */
-.earn-header {
+/* ── Subheader Navigation ─────────────────────────────────────────────────── */
+.earn-subnav {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
 }
 
-.earn-header-left {
+.earn-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  color: var(--text-3);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--r-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.earn-back-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--border-2);
+  transform: translateX(-2px);
+}
+
+.earn-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  padding: 5px 12px;
+  border-radius: var(--r-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary-l);
+}
+
+.earn-brand-bolt {
+  color: var(--primary-l);
+}
+
+/* ── Page Title Header (CAPTCHA EARN FLOW) ────────────────────────────────── */
+.earn-flow-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  flex: 1;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+
+.earn-flow-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
   min-width: 0;
 }
 
-.earn-header-icon {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  border-radius: var(--r-md);
-  background: var(--grad-earn);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(59,130,246,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+.earn-flow-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--primary-l);
 }
 
-.earn-header-text { min-width: 0; }
-
-.earn-title {
-  font-size: 1.25rem;
+.earn-flow-title {
+  font-size: 1.6rem;
   font-weight: 800;
-  color: var(--text);
-  margin: 0;
-  line-height: 1.2;
+  color: #ffffff;
   letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
 }
 
-.earn-subtitle {
-  font-size: 0.8rem;
+.earn-flow-subtitle {
+  font-size: 0.85rem;
   color: var(--text-3);
-  margin: 0.15rem 0 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin: 0;
+  line-height: 1.4;
 }
 
-.earn-header-right {
+.earn-flow-header-stats {
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-shrink: 0;
 }
 
-/* ── Session stats strip ─────────────────────────────────────────────────────── */
+/* ── 5-State Numbered Progress Indicator ─────────────────────────────────── */
+.flow-stepper {
+  background: var(--surface-1);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-xl);
+  padding: 0.85rem 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.flow-stepper-track {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  position: relative;
+}
+
+.stepper-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  text-align: center;
+  position: relative;
+  transition: all 0.25s ease;
+}
+
+.stepper-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1.5px solid var(--border-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-4);
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.25s ease;
+}
+
+.stepper-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+/* Completed Step */
+.stepper-node--completed .stepper-circle {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: var(--primary);
+  color: var(--primary-l);
+}
+
+.stepper-node--completed .stepper-label {
+  color: var(--text-3);
+}
+
+/* Active Step 1 & 2: Electric Blue */
+.stepper-node--step1 .stepper-circle,
+.stepper-node--step2 .stepper-circle {
+  background: var(--primary);
+  border-color: #ffffff;
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.8);
+  transform: scale(1.1);
+}
+
+.stepper-node--step1 .stepper-label,
+.stepper-node--step2 .stepper-label {
+  color: var(--primary-l);
+}
+
+/* Active Step 3: Violet */
+.stepper-node--step3 .stepper-circle {
+  background: var(--accent);
+  border-color: #ffffff;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.9);
+  transform: scale(1.1);
+}
+
+.stepper-node--step3 .stepper-label {
+  color: var(--accent-l);
+}
+
+/* Active Step 4: Green (Success) */
+.stepper-node--step4 .stepper-circle {
+  background: var(--success);
+  border-color: #ffffff;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.9);
+  transform: scale(1.1);
+}
+
+.stepper-node--step4 .stepper-label {
+  color: var(--success-l);
+}
+
+/* Active Step 5: Red (Incorrect) */
+.stepper-node--step5 .stepper-circle {
+  background: var(--danger);
+  border-color: #ffffff;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.9);
+  transform: scale(1.1);
+}
+
+.stepper-node--step5 .stepper-label {
+  color: var(--danger-l);
+}
+
+/* ── Session Stats Strip ─────────────────────────────────────────────────── */
 .earn-stats {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   background: var(--surface-1);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 0.65rem 1.2rem;
-  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-xl);
+  padding: 0.75rem 1.4rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .earn-stat {
@@ -124,22 +280,25 @@
 }
 
 .earn-stat-label {
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   font-weight: 700;
   color: var(--text-4);
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   white-space: nowrap;
 }
 
 .earn-stat-sep {
   width: 1px;
-  height: 28px;
+  height: 26px;
   background: var(--border-2);
   flex-shrink: 0;
 }
 
-.earn-stat--correct .earn-stat-value { color: var(--success-l); }
+.earn-stat--correct .earn-stat-value {
+  color: var(--success-l);
+}
+
 .earn-stat--gems .earn-stat-value {
   background: var(--grad-accent);
   -webkit-background-clip: text;
@@ -147,115 +306,286 @@
   background-clip: text;
 }
 
-/* ── Main challenge card ─────────────────────────────────────────────────────── */
+/* ── Main Challenge Card ─────────────────────────────────────────────────── */
 .earn-card {
   background: var(--surface-1);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border-2);
   border-radius: var(--r-2xl);
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.4rem;
+  gap: 1.35rem;
   box-shadow:
-    0 20px 48px -12px rgba(0,0,0,0.65),
-    0 0 0 1px rgba(255,255,255,0.05),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-  transition: border-color 0.25s ease;
+    0 24px 60px -15px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
-/* Challenge active state */
-.earn-card--idle { border-color: rgba(59,130,246,0.15); }
-.earn-card--verifying { border-color: rgba(59,130,246,0.3); }
-.earn-card--correct { border-color: rgba(34,197,94,0.3); }
-.earn-card--wrong   { border-color: rgba(239,68,68,0.25); }
+/* Card phase-glow modifiers */
+.earn-card--step1 {
+  border-color: rgba(59, 130, 246, 0.25);
+}
 
+.earn-card--step2 {
+  border-color: rgba(59, 130, 246, 0.55);
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.7), 0 0 28px rgba(59, 130, 246, 0.15);
+}
+
+.earn-card--step3 {
+  border-color: rgba(139, 92, 246, 0.55);
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.7), 0 0 32px rgba(139, 92, 246, 0.22);
+}
+
+.earn-card--step4 {
+  border-color: rgba(34, 197, 94, 0.5);
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.7), 0 0 36px rgba(34, 197, 94, 0.22);
+}
+
+.earn-card--step5 {
+  border-color: rgba(239, 68, 68, 0.45);
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.7), 0 0 32px rgba(239, 68, 68, 0.2);
+}
+
+/* Step divider */
 .earn-divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-2) 30%, var(--border-2) 70%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   margin: -0.25rem 0;
 }
 
-.earn-verifying { padding: 0.5rem 0; }
+.earn-divider::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-2) 25%, var(--border-2) 75%, transparent);
+}
 
-/* ── Verify button ────────────────────────────────────────────────────────────── */
+.earn-divider-text {
+  position: relative;
+  background: var(--surface-1);
+  padding: 0 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-4);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.earn-verifying-panel {
+  padding: 0.5rem 0;
+}
+
+/* ── Action Wrap & Verify Button ─────────────────────────────────────────── */
+.earn-action-wrap {
+  width: 100%;
+}
+
 .btn-verify {
   width: 100%;
   justify-content: center;
-  padding: 0.95rem;
-  font-size: 1rem;
+  padding: 1.05rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: -0.015em;
-  border-radius: var(--r-lg);
+  letter-spacing: -0.01em;
+  border-radius: var(--r-xl);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.25s ease;
 }
 
 .btn-verify:not(:disabled) {
-  animation: verify-pulse 2.5s ease-in-out infinite;
+  background: var(--grad-primary);
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  cursor: pointer;
 }
 
-@keyframes verify-pulse {
-  0%, 100% { box-shadow: 0 2px 10px rgba(37,99,235,0.3), inset 0 1px 0 rgba(255,255,255,0.18); }
-  50%       { box-shadow: 0 6px 24px rgba(37,99,235,0.55), inset 0 1px 0 rgba(255,255,255,0.28); }
+.btn-verify:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-/* ── Skip ─────────────────────────────────────────────────────────────────────── */
-.earn-skip { text-align: center; }
+.btn-verify--disabled {
+  opacity: 0.45;
+  cursor: not-allowed !important;
+  background: var(--surface-3) !important;
+  border-color: var(--border) !important;
+  color: var(--text-4) !important;
+}
+
+/* ── Skip Challenge ───────────────────────────────────────────────────────── */
+.earn-skip {
+  text-align: center;
+}
 
 .earn-skip .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: var(--text-4);
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   border-color: transparent;
   background: transparent;
-  transition: color 0.18s;
+  transition: all 0.2s ease;
+  padding: 6px 14px;
+  border-radius: var(--r-full);
 }
 
 .earn-skip .btn:hover {
-  color: var(--text-3);
-  background: rgba(255,255,255,0.03);
+  color: var(--text-2);
+  background: var(--surface-1);
   border-color: var(--border);
 }
 
-/* ── Milestone toast ──────────────────────────────────────────────────────────── */
+/* ── Milestone Toast ──────────────────────────────────────────────────────── */
 .earn-milestone {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  background: rgba(59,130,246,0.1);
-  border: 1px solid rgba(59,130,246,0.25);
-  border-radius: var(--r-md);
-  padding: 0.75rem 1rem;
-  animation: milestone-in 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  gap: 0.75rem;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: var(--r-lg);
+  padding: 0.85rem 1.15rem;
+  animation: milestone-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-@keyframes milestone-in {
-  from { opacity: 0; transform: translateY(-8px) scale(0.95); }
+@keyframes milestone-pop {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .earn-milestone-icon {
-  font-size: 1.35rem;
-  flex-shrink: 0;
-  filter: drop-shadow(0 0 8px rgba(59,130,246,0.6));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.5));
 }
 
 .earn-milestone-text strong {
   display: block;
-  font-size: 0.88rem;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--primary-l);
-  letter-spacing: -0.01em;
 }
 
 .earn-milestone-text span {
-  font-size: 0.78rem;
+  font-size: 0.8125rem;
   color: var(--text-3);
 }
 
-/* ── Mobile ─────────────────────────────────────────────────────────────────── */
-@media (max-width: 540px) {
-  .earn-main { padding: 1.5rem 1rem 2.5rem; }
-  .earn-card { padding: 1.35rem; border-radius: var(--r-xl); gap: 1.2rem; }
-  .earn-header-right { gap: 0.5rem; }
-  .earn-title { font-size: 1.1rem; }
-  .earn-stats { padding: 0.55rem 0.85rem; }
-  .earn-stat-value { font-size: 1rem; }
+/* ── Reward Information Card & Security Notice ───────────────────────────── */
+.earn-info-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.earn-reward-info-card,
+.earn-security-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-xl);
+  padding: 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-xs);
+}
+
+.earn-info-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.earn-info-icon {
+  color: var(--primary-l);
+}
+
+.earn-security-icon {
+  color: var(--success-l);
+}
+
+.earn-info-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.earn-reward-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.earn-reward-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.6rem;
+  background: var(--surface-2);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+}
+
+.earn-reward-type {
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+
+.earn-reward-val {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.earn-reward-val--green { color: var(--success-l); }
+.earn-reward-val--amber { color: var(--warning-l); }
+
+.earn-security-desc {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .earn-flow-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .earn-flow-header-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .earn-info-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .flow-stepper-track {
+    gap: 0.25rem;
+  }
+
+  .stepper-label {
+    font-size: 0.55rem;
+    letter-spacing: 0;
+  }
+
+  .stepper-circle {
+    width: 24px;
+    height: 24px;
+    font-size: 0.68rem;
+  }
 }
