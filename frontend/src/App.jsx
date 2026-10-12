@@ -14,6 +14,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import CaptchaEarn from './pages/CaptchaEarn';
 import Wallet from './pages/Wallet';
+import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/captcha"   element={<ProtectedRoute><CaptchaEarn /></ProtectedRoute>} />
           <Route path="/wallet"    element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
+          <Route path="/profile"   element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
           {/* 404 */}
           <Route path="*" element={<NotFound />} />

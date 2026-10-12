@@ -3,7 +3,7 @@
  */
 
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Gem, LogOut, Zap } from 'lucide-react';
+import { Gem, LogOut, Zap, LayoutDashboard, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { GemBalance } from '../GemBalance/GemBalance';
 import './Navbar.css';
@@ -21,7 +21,7 @@ export function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         {/* Brand */}
-        <Link to="/captcha" className="navbar-brand">
+        <Link to="/dashboard" className="navbar-brand">
           <div className="navbar-logo">
             <Zap size={18} />
           </div>
@@ -34,18 +34,32 @@ export function Navbar() {
         {/* Nav links */}
         <div className="navbar-links">
           <NavLink
+            to="/dashboard"
+            className={({ isActive }) => `nav-link${isActive ? ' nav-link--active' : ''}`}
+          >
+            <LayoutDashboard size={14} />
+            Dashboard
+          </NavLink>
+          <NavLink
             to="/captcha"
             className={({ isActive }) => `nav-link${isActive ? ' nav-link--active' : ''}`}
           >
-            <Zap size={15} />
+            <Zap size={14} />
             Earn
           </NavLink>
           <NavLink
             to="/wallet"
             className={({ isActive }) => `nav-link${isActive ? ' nav-link--active' : ''}`}
           >
-            <Gem size={15} />
+            <Gem size={14} />
             Wallet
+          </NavLink>
+          <NavLink
+            to="/profile"
+            className={({ isActive }) => `nav-link${isActive ? ' nav-link--active' : ''}`}
+          >
+            <User size={14} />
+            Profile
           </NavLink>
         </div>
 
@@ -53,12 +67,12 @@ export function Navbar() {
         <div className="navbar-right">
           {user && <GemBalance compact />}
           {user && (
-            <div className="navbar-user">
+            <Link to="/profile" className="navbar-user" title="View Profile">
               <div className="navbar-avatar">
                 {user.name?.[0]?.toUpperCase() || 'U'}
               </div>
               <span className="navbar-username">{user.name}</span>
-            </div>
+            </Link>
           )}
           <button className="btn-icon" onClick={handleLogout} title="Logout" aria-label="Logout">
             <LogOut size={17} />
