@@ -38,6 +38,9 @@ const { errorHandler, notFoundHandler } = require('./src/middleware/error.middle
 // ─── 3. Create Express Application ───────────────────────────────────────────
 const app = express();
 
+// Trust reverse proxy (Render, Vercel, Nginx) so req.ip and express-rate-limit correctly resolve client IPs
+app.set('trust proxy', 1);
+
 // ─── 4. Security Middleware ───────────────────────────────────────────────────
 
 // Helmet sets secure HTTP response headers
